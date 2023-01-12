@@ -1,20 +1,10 @@
 package facades;
-
-import dtos.UserDto;
 import entities.*;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserFacadeTest {
     private static EntityManagerFactory emf;
