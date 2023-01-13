@@ -1,16 +1,18 @@
 package facades;
+import dtos.OwnerDto;
 import entities.*;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.List;
 
 public class UserFacadeTest {
     private static EntityManagerFactory emf;
     private static UserFacade facade;
 
-    private User u1, u2, u3;
+    private Owner o1, o2, o3;
 
     public UserFacadeTest() {
     }
@@ -31,21 +33,15 @@ public class UserFacadeTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("User.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Role.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Owner.deleteAllRows").executeUpdate();
 
-            Role userRole = new Role("user");
-            u1 = new User("user1", "test1", "Jagtvej 60", "11223344");
-            u1.addRole(userRole);
-            u2 = new User("user2", "test2", "Jagtvej 60", "11223344");
-            u2.addRole(userRole);
-            u3 = new User("user3", "test3", "Jagtvej 60", "11223344");
-            u3.addRole(userRole);
+            o1= new Owner("Hans", "Jagtvej 60", "11223344");
+            o2= new Owner("Bob", "Jagtvej 60", "11223344");
+            o3= new Owner("Jens", "Jagtvej 60", "11223344");
 
-            em.persist(userRole);
-            em.persist(u1);
-            em.persist(u2);
-            em.persist(u3);
+            em.persist(o1);
+            em.persist(o2);
+            em.persist(o3);
 
             em.getTransaction().commit();
         } finally {
@@ -59,10 +55,10 @@ public class UserFacadeTest {
     }
 
     @Test
-    public void testGetAllExercises(){
-        List<UserDto> actual = facade.getAllOwners;
-        assert(actual.contains(new UserDto(u1)));
-        assert(actual.contains(new UserDto(u2)));
-        assert(actual.contains(new UserDto(u3)));
+    public void testGetAllOwners(){
+        List<OwnerDto> actual = facade.getAllOwners();
+        assert(actual.contains(new OwnerDto(o1)));
+        assert(actual.contains(new OwnerDto(o2)));
+        assert(actual.contains(new OwnerDto(o3)));
     }
 }

@@ -1,9 +1,16 @@
 package facades;
 
+import dtos.OwnerDto;
+import entities.Owner;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+
 import security.errorhandling.AuthenticationException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lam@cphbusiness.dk
@@ -42,5 +49,19 @@ public class UserFacade {
         }
         return user;
     }
+
+    public List<OwnerDto> getAllOwners(){
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Owner> query = em.createQuery("SELECT r FROM Owner r", Owner.class);
+            List<Owner> owners = query.getResultList();
+
+
+            ArrayList<OwnerDto> ownerDtos = new ArrayList<>();
+            for (Owner owner : owners) {
+                ownerDtos.add(new OwnerDto(owner));
+            }
+        System.out.println(ownerDtos);
+            return ownerDtos;
+        }
 
 }
