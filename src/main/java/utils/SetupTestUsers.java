@@ -1,11 +1,15 @@
 package utils;
 
 
+import entities.Boat;
+import entities.Owner;
 import entities.Role;
 import entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SetupTestUsers {
 
@@ -23,6 +27,8 @@ public class SetupTestUsers {
     User user = new User("user", "test");
     User admin = new User("admin", "test");
     User both = new User("user_admin", "test");
+    Set<Boat> boatSet = new HashSet<>();
+    Owner owner = new Owner("bob", "vej", "11223344", boatSet);
 
     if(admin.getUserPass().equals("test")||user.getUserPass().equals("test")||both.getUserPass().equals("test"))
       throw new UnsupportedOperationException("You have not changed the passwords");
@@ -39,6 +45,7 @@ public class SetupTestUsers {
     em.persist(user);
     em.persist(admin);
     em.persist(both);
+    em.persist(owner);
     em.getTransaction().commit();
     System.out.println("PW: " + user.getUserPass());
     System.out.println("Testing user with OK password: " + user.verifyPassword("test"));

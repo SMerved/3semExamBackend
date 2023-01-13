@@ -1,26 +1,25 @@
 package entities;
 
 import dtos.BoatDto;
+import dtos.HarbourDto;
 import dtos.OwnerDto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name = "owners")
-@NamedQuery(name = "Owner.deleteAllRows", query = "DELETE from Owner")
-public class Owner implements Serializable {
+@Table(name = "harbours")
+@NamedQuery(name = "Harbour.deleteAllRows", query = "DELETE from Harbour")
+public class Harbour implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "owner_id")
     private Long id;
 
     @NotNull
@@ -30,38 +29,34 @@ public class Owner implements Serializable {
     @Column(name = "address")
     private String address;
     @NotNull
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "capacity")
+    private int capacity;
 
-    @ManyToMany
-    @JoinTable(
-            name = "boat_owners",
-            joinColumns = @JoinColumn(name = "owner_id"),
-            inverseJoinColumns = @JoinColumn(name = "boat_id"))
-    private Set<Boat> boats = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "harbour")
+    private List<Boat> boats = new ArrayList<>();
 
-    public Owner() {
+    public Harbour() {
     }
 
-    public Owner(String name, String address, String phone) {
+    public Harbour(String name, String address, int capacity) {
         this.name = name;
         this.address = address;
-        this.phone = phone;
+        this.capacity = capacity;
     }
 
-    public Owner(String name, String address, String phone, Set<Boat> boats) {
+    public Harbour(String name, String address, int capacity, List<Boat> boats) {
         this.name = name;
         this.address = address;
-        this.phone = phone;
+        this.capacity = capacity;
         this.boats = boats;
     }
 
-    public Owner(OwnerDto ownerDto) {
-        this.name = ownerDto.getName();
-        this.address = ownerDto.getAddress();
-        this.phone = ownerDto.getPhone();
-        this.boats = new HashSet<>();
-        for (BoatDto boatDto : ownerDto.getBoatDtos()) {
+    public Harbour(HarbourDto harbourDto){
+        this.name = harbourDto.getName();
+        this.address = harbourDto.getAddress();
+        this.capacity = harbourDto.getCapacity();
+        this.boats = new ArrayList<>();
+        for (BoatDto boatDto : harbourDto.getBoats()) {
             this.boats.add(new Boat(boatDto));
         }
     }
@@ -82,19 +77,19 @@ public class Owner implements Serializable {
         this.address = address;
     }
 
-    public String getPhone() {
-        return phone;
+    public int getCapacity() {
+        return capacity;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 
-    public Set<Boat> getBoats() {
+    public List<Boat> getBoats() {
         return boats;
     }
 
-    public void setBoats(Set<Boat> boats) {
+    public void setBoats(List<Boat> boats) {
         this.boats = boats;
     }
 

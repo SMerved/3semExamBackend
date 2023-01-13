@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.OwnerDto;
+import entities.Boat;
 import entities.Owner;
 import entities.User;
 import facades.UserFacade;
@@ -19,7 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static io.restassured.RestAssured.authentication;
 import static io.restassured.RestAssured.given;
@@ -84,9 +87,10 @@ public class UserResourceTest {
 
             em.createNamedQuery("Owner.deleteAllRows").executeUpdate();
 
-            o1= new Owner("Hans", "Jagtvej 60", "11223344");
-            o2= new Owner("Bob", "Jagtvej 60", "11223344");
-            o3= new Owner("Jens", "Jagtvej 60", "11223344");
+            Set<Boat> boatSet = new HashSet<>();
+            o1= new Owner("Hans", "Jagtvej 60", "11223344", boatSet);
+            o2= new Owner("Bob", "Jagtvej 60", "11223344", boatSet);
+            o3= new Owner("Jens", "Jagtvej 60", "11223344", boatSet);
 
             em.persist(o1);
             em.persist(o2);

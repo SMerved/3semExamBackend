@@ -1,10 +1,14 @@
 package dtos;
 
+import entities.Boat;
 import entities.Owner;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class OwnerDto implements Serializable {
     @NotNull
@@ -13,11 +17,13 @@ public class OwnerDto implements Serializable {
     private final String address;
     @NotNull
     private final String phone;
+    private Set<BoatDto> boatDtos;
 
-    public OwnerDto(String name, String address, String phone) {
+    public OwnerDto(String name, String address, String phone, Set<BoatDto> boatDtos) {
         this.name = name;
         this.address = address;
         this.phone = phone;
+        this.boatDtos = boatDtos;
     }
 
     public  OwnerDto(Owner owner){
@@ -36,6 +42,10 @@ public class OwnerDto implements Serializable {
 
     public String getPhone() {
         return phone;
+    }
+
+    public Set<BoatDto> getBoatDtos() {
+        return boatDtos;
     }
 
     @Override
