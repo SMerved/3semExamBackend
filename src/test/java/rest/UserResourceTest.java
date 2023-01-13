@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.OwnerDto;
 import entities.Owner;
+import entities.User;
 import facades.UserFacade;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.List;
 
+import static io.restassured.RestAssured.authentication;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -95,6 +97,21 @@ public class UserResourceTest {
         }
     }
 
+    private static String securityToken;
+
+    //Utility method to login and set the returned securityToken
+    private static void login(String role, String password) {
+        String json = String.format("{username: \"%s\", password: \"%s\"}", role, password);
+        securityToken = given()
+                .contentType("application/json")
+                .body(json)
+                //.when().post("/api/login")
+                .when().post("/login")
+                .then()
+                .extract().path("token");
+        //System.out.println("TOKEN ---> " + securityToken);
+    }
+
     @Test
     public void testServerIsUp() {
         given().when().get("/info").then().statusCode(200);
@@ -108,9 +125,10 @@ public class UserResourceTest {
     @Test
     public void testGetAllOwners() throws Exception {
         List<OwnerDto> ownerDtos;
-
+        login("user", "test");
         ownerDtos = given()
                 .contentType("application/json")
+                .header("x-access-token", securityToken)
                 .when()
                 .get("/owners")
                 .then()
