@@ -6,6 +6,7 @@ import dtos.OwnerDto;
 import facades.UserFacade;
 import utils.EMF_Creator;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import java.util.List;
 
 //Todo Remove or change relevant parts before ACTUAL use
 @Path("owners")
+@RolesAllowed("user")
 public class UserResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
