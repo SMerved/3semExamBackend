@@ -2,13 +2,11 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.BoatDto;
 import dtos.OwnerDto;
-import entities.Boat;
-import entities.Owner;
-import entities.User;
+import entities.*;
 import facades.UserFacade;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -24,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static io.restassured.RestAssured.authentication;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -41,6 +38,8 @@ public class UserResourceTest {
     private static UserFacade facade;
 
     private Owner o1, o2, o3;
+    private Boat b1, b2, b3;
+    private Harbour h1, h2;
 
     public UserResourceTest() {
     }
@@ -76,8 +75,6 @@ public class UserResourceTest {
         httpServer.shutdownNow();
     }
 
-    // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
-    //TODO -- Make sure to change the EntityClass used below to use YOUR OWN (renamed) Entity class
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
@@ -85,16 +82,61 @@ public class UserResourceTest {
         try {
             em.getTransaction().begin();
 
+            em.createNamedQuery("Boat.deleteAllRows").executeUpdate();
             em.createNamedQuery("Owner.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Harbour.deleteAllRows").executeUpdate();
+            em.createQuery("delete from User").executeUpdate();
+            em.createQuery("delete from Role").executeUpdate();
 
-            Set<Boat> boatSet = new HashSet<>();
-            o1= new Owner("Hans", "Jagtvej 60", "11223344", boatSet);
-            o2= new Owner("Bob", "Jagtvej 60", "11223344", boatSet);
-            o3= new Owner("Jens", "Jagtvej 60", "11223344", boatSet);
+            Role userRole = new Role("user");
+            Role adminRole = new Role("admin");
+            User user = new User("user", "test");
+            user.addRole(userRole);
+            User admin = new User("admin", "test");
+            admin.addRole(adminRole);
+            User both = new User("user_admin", "test");
+            both.addRole(userRole);
+            both.addRole(adminRole);
 
+            Set<Owner> owners1 = new HashSet<>();
+            Set<Owner> owners2 = new HashSet<>();
+            Set<Owner> owners3 = new HashSet<>();
+
+
+            o1= new Owner("Hans", "Jagtvej 60", "11223344");
+            o2= new Owner("Bob", "Jagtvej 60", "11223344");
+            o3= new Owner("Jens", "Jagtvej 60", "11223344");
+
+            h1= new Harbour("Harbour1", "Ved vandet", 10);
+            h2= new Harbour("Harbour2", "Også ved vandet", 8);
+
+            b1= new Boat("boat1", "fast", "water", "sailing", h1, owners1);
+            b2= new Boat("boat2", "faster", "water", "sailing", h1, owners2);
+            b3= new Boat("boat3", "fastest", "water", "sailing", h2, owners3);
+
+            o1.getBoats().add(b1);
+            o2.getBoats().add(b2);
+            o3.getBoats().add(b3);
+            b1.getOwners().add(o1);
+            b2.getOwners().add(o2);
+            b3.getOwners().add(o3);
+            h1.getBoats().add(b1);
+            h1.getBoats().add(b2);
+            h2.getBoats().add(b3);
+
+            em.persist(userRole);
+            em.persist(adminRole);
+            em.persist(user);
+            em.persist(admin);
+            em.persist(both);
+            em.persist(b1);
+            em.persist(b2);
+            em.persist(b3);
             em.persist(o1);
             em.persist(o2);
             em.persist(o3);
+            em.persist(h1);
+            em.persist(h2);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -121,10 +163,6 @@ public class UserResourceTest {
         given().when().get("/info").then().statusCode(200);
     }
 
-    @AfterEach
-    public void tearDown() {
-//        Remove any data after each test was run
-    }
 
     @Test
     public void testGetAllOwners() throws Exception {
@@ -134,13 +172,26 @@ public class UserResourceTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/owners")
+                .get("/boats/owners")
                 .then()
                 .extract().body().jsonPath().getList("", OwnerDto.class);
 
         assertThat(ownerDtos, containsInAnyOrder(new OwnerDto(o1), new OwnerDto(o2), new OwnerDto(o3)));
+    }
 
+    @Test
+    public void testGetBoatsFromHarbour() throws Exception {
+        List<BoatDto> boatDtos;
+        login("user", "test");
+        boatDtos = given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/boats/"+ h1.getId())
+                .then()
+                .extract().body().jsonPath().getList("", BoatDto.class);
 
+        assertThat(boatDtos, containsInAnyOrder(new BoatDto(b1), new BoatDto(b2)));
     }
 
 }

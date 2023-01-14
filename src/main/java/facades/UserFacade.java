@@ -1,6 +1,8 @@
 package facades;
 
+import dtos.BoatDto;
 import dtos.OwnerDto;
+import entities.Boat;
 import entities.Owner;
 import entities.User;
 import javax.persistence.EntityManager;
@@ -56,12 +58,25 @@ public class UserFacade {
             List<Owner> owners = query.getResultList();
 
 
-            ArrayList<OwnerDto> ownerDtos = new ArrayList<>();
+            List<OwnerDto> ownerDtos = new ArrayList<>();
             for (Owner owner : owners) {
                 ownerDtos.add(new OwnerDto(owner));
             }
         System.out.println(ownerDtos);
             return ownerDtos;
         }
+
+    public List<BoatDto> getBoatsFromHarbour(Long id) {
+        EntityManager em = emf.createEntityManager();
+
+        TypedQuery<Boat> query = (TypedQuery<Boat>) em.createNativeQuery("SELECT * FROM boats WHERE harbour_id = ? ", Boat.class);
+        query.setParameter(1, id);
+        List<Boat> boatList = query.getResultList();
+        List<BoatDto> boatDtos = new ArrayList<>();
+        for (Boat boat : boatList) {
+            boatDtos.add(new BoatDto(boat));
+        }
+        return boatDtos;
+    }
 
 }

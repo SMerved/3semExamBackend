@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.BoatDto;
 import dtos.OwnerDto;
 import facades.UserFacade;
 import utils.EMF_Creator;
@@ -14,8 +15,8 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 //Todo Remove or change relevant parts before ACTUAL use
-@Path("owners")
 @RolesAllowed("user")
+@Path("boats")
 public class UserResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
@@ -25,12 +26,23 @@ public class UserResource {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @GET
+    @Path("owners")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAllOwners() {
         List<OwnerDto> ownerDtos = FACADE.getAllOwners();
         System.out.println(ownerDtos);
 
         return Response.ok().entity(GSON.toJson(ownerDtos)).build();
+    }
+
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllBoatsFromHarbour(@PathParam("id") String content) {
+        Long harbourId = GSON.fromJson(content, Long.class);
+        List<BoatDto> boatDtos = FACADE.getBoatsFromHarbour(harbourId);
+
+        return Response.ok().entity(GSON.toJson(boatDtos)).build();
     }
 
 }

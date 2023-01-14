@@ -1,4 +1,5 @@
 package facades;
+import dtos.BoatDto;
 import dtos.OwnerDto;
 import entities.*;
 import org.junit.jupiter.api.*;
@@ -25,11 +26,6 @@ public class UserFacadeTest {
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = UserFacade.getUserFacade(emf);
-    }
-
-    @AfterAll
-    public static void tearDownClass() {
-//        Clean up database after test is done or use a persistence unit with drop-and-create to start up clean on every test
     }
 
 
@@ -84,16 +80,18 @@ public class UserFacadeTest {
         }
     }
 
-    @AfterEach
-    public void tearDown() {
-//        Remove any data after each test was run
-    }
-
     @Test
     public void testGetAllOwners(){
         List<OwnerDto> actual = facade.getAllOwners();
         assert(actual.contains(new OwnerDto(o1)));
         assert(actual.contains(new OwnerDto(o2)));
         assert(actual.contains(new OwnerDto(o3)));
+    }
+
+    @Test
+    public void testGetBoatsFromHarbour() throws Exception {
+        List<BoatDto> actual = facade.getBoatsFromHarbour(h1.getId());
+        assert (actual.contains(new BoatDto(b1)));
+        assert (actual.contains(new BoatDto(b2)));
     }
 }
