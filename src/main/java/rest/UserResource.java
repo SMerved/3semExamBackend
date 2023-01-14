@@ -45,4 +45,14 @@ public class UserResource {
         return Response.ok().entity(GSON.toJson(boatDtos)).build();
     }
 
+    @GET
+    @Path("owners/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllOwnersFromBoat(@PathParam("id") String content) {
+        Long boatId = GSON.fromJson(content, Long.class);
+        List<OwnerDto> ownerDtos = FACADE.getOwnersFromBoat(boatId);
+
+        return Response.ok().entity(GSON.toJson(ownerDtos)).build();
+    }
+
 }

@@ -115,10 +115,12 @@ public class UserResourceTest {
             b3= new Boat("boat3", "fastest", "water", "sailing", h2, owners3);
 
             o1.getBoats().add(b1);
+            o1.getBoats().add(b2);
             o2.getBoats().add(b2);
             o3.getBoats().add(b3);
             b1.getOwners().add(o1);
             b2.getOwners().add(o2);
+            b2.getOwners().add(o1);
             b3.getOwners().add(o3);
             h1.getBoats().add(b1);
             h1.getBoats().add(b2);
@@ -192,6 +194,21 @@ public class UserResourceTest {
                 .extract().body().jsonPath().getList("", BoatDto.class);
 
         assertThat(boatDtos, containsInAnyOrder(new BoatDto(b1), new BoatDto(b2)));
+    }
+
+    @Test
+    public void testGetOwnersFromBoat() throws Exception {
+        List<OwnerDto> ownerDtos;
+        login("user", "test");
+        ownerDtos = given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/boats/owners/"+ b2.getId())
+                .then()
+                .extract().body().jsonPath().getList("", OwnerDto.class);
+
+        assertThat(ownerDtos, containsInAnyOrder(new OwnerDto(o1), new OwnerDto(o2)));
     }
 
 }

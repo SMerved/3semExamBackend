@@ -13,6 +13,7 @@ import security.errorhandling.AuthenticationException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author lam@cphbusiness.dk
@@ -77,6 +78,19 @@ public class UserFacade {
             boatDtos.add(new BoatDto(boat));
         }
         return boatDtos;
+    }
+
+    public List<OwnerDto> getOwnersFromBoat(Long id) {
+        EntityManager em = emf.createEntityManager();
+        Boat boat;
+        boat = em.find(Boat.class, id);
+        Set<Owner> owners = boat.getOwners();
+
+        List<OwnerDto> ownerDtos = new ArrayList<>();
+        for (Owner owner : owners) {
+            ownerDtos.add(new OwnerDto(owner));
+        }
+        return ownerDtos;
     }
 
 }

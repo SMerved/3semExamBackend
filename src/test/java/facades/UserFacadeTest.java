@@ -55,10 +55,12 @@ public class UserFacadeTest {
             b3= new Boat("boat3", "fastest", "water", "sailing", h2, owners3);
 
             o1.getBoats().add(b1);
+            o1.getBoats().add(b2);
             o2.getBoats().add(b2);
             o3.getBoats().add(b3);
             b1.getOwners().add(o1);
             b2.getOwners().add(o2);
+            b2.getOwners().add(o1);
             b3.getOwners().add(o3);
             h1.getBoats().add(b1);
             h1.getBoats().add(b2);
@@ -93,5 +95,12 @@ public class UserFacadeTest {
         List<BoatDto> actual = facade.getBoatsFromHarbour(h1.getId());
         assert (actual.contains(new BoatDto(b1)));
         assert (actual.contains(new BoatDto(b2)));
+    }
+
+    @Test
+    public void testGetOwnersFromBoat() throws Exception {
+        List<OwnerDto> actual = facade.getOwnersFromBoat(b2.getId());
+        assert (actual.contains(new OwnerDto(o1)));
+        assert (actual.contains(new OwnerDto(o2)));
     }
 }
