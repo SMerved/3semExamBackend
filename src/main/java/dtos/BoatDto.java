@@ -11,6 +11,8 @@ import java.util.Set;
 
 public class BoatDto implements Serializable {
     @NotNull
+    private Long id;
+    @NotNull
     private final String brand;
     @NotNull
     private final String make;
@@ -23,7 +25,8 @@ public class BoatDto implements Serializable {
     @NotNull
     private final Set<OwnerDto> ownerDtos;
 
-    public BoatDto(String brand, String make, String name, String image, HarbourDto harbourDto, Set<OwnerDto> ownerDtos) {
+    public BoatDto(Long id, String brand, String make, String name, String image, HarbourDto harbourDto, Set<OwnerDto> ownerDtos) {
+        this.id = id;
         this.brand = brand;
         this.make = make;
         this.name = name;
@@ -33,6 +36,7 @@ public class BoatDto implements Serializable {
     }
 
     public BoatDto(Boat boat){
+        this.id = boat.getId();
         this.brand = boat.getBrand();
         this.make = boat.getMake();
         this.name = boat.getName();
