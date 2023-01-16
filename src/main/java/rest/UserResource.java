@@ -26,6 +26,14 @@ public class UserResource {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllBoats() {
+        List<BoatDto> boatDtos = FACADE.getAllBoats();
+
+        return Response.ok().entity(GSON.toJson(boatDtos)).build();
+    }
+
+    @GET
     @Path("owners")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAllOwners() {

@@ -182,6 +182,21 @@ public class UserResourceTest {
     }
 
     @Test
+    public void testGetAllBoats() throws Exception {
+        List<BoatDto> boatDtos;
+        login("user", "test");
+        boatDtos = given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/boats")
+                .then()
+                .extract().body().jsonPath().getList("", BoatDto.class);
+
+        assertThat(boatDtos, containsInAnyOrder(new BoatDto(b1), new BoatDto(b2), new BoatDto(b3)));
+    }
+
+    @Test
     public void testGetBoatsFromHarbour() throws Exception {
         List<BoatDto> boatDtos;
         login("user", "test");

@@ -91,6 +91,14 @@ public class UserFacadeTest {
     }
 
     @Test
+    public void testGetAllBoats(){
+        List<BoatDto> actual = facade.getAllBoats();
+        assert(actual.contains(new BoatDto(b1)));
+        assert(actual.contains(new BoatDto(b2)));
+        assert(actual.contains(new BoatDto(b3)));
+    }
+
+    @Test
     public void testGetBoatsFromHarbour() throws Exception {
         List<BoatDto> actual = facade.getBoatsFromHarbour(h1.getId());
         assert (actual.contains(new BoatDto(b1)));

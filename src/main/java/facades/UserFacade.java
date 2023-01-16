@@ -55,7 +55,7 @@ public class UserFacade {
 
     public List<OwnerDto> getAllOwners(){
             EntityManager em = emf.createEntityManager();
-            TypedQuery<Owner> query = em.createQuery("SELECT r FROM Owner r", Owner.class);
+            TypedQuery<Owner> query = em.createQuery("SELECT o FROM Owner o", Owner.class);
             List<Owner> owners = query.getResultList();
 
 
@@ -66,6 +66,20 @@ public class UserFacade {
         System.out.println(ownerDtos);
             return ownerDtos;
         }
+
+    public List<BoatDto> getAllBoats(){
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Boat> query = em.createQuery("SELECT b FROM Boat b", Boat.class);
+        List<Boat> boats = query.getResultList();
+
+
+        List<BoatDto> boatDtos = new ArrayList<>();
+        for (Boat boat : boats) {
+            boatDtos.add(new BoatDto(boat));
+        }
+
+        return boatDtos;
+    }
 
     public List<BoatDto> getBoatsFromHarbour(Long id) {
         EntityManager em = emf.createEntityManager();
