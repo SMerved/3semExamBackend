@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -60,6 +61,12 @@ public class Harbour implements Serializable {
             this.boats.add(new Boat(boatDto));
         }
     }
+    public Harbour(HarbourDto.InnerHarbourDto innerHarbourDto){
+        this.id = innerHarbourDto.getId();
+        this.name = innerHarbourDto.getName();
+        this.address = innerHarbourDto.getAddress();
+        this.capacity = innerHarbourDto.getCapacity();
+    }
 
     public String getName() {
         return name;
@@ -101,4 +108,26 @@ public class Harbour implements Serializable {
         this.id = id;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Harbour harbour = (Harbour) o;
+        return capacity == harbour.capacity && Objects.equals(name, harbour.name) && Objects.equals(address, harbour.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, address, capacity);
+    }
+
+    @Override
+    public String toString() {
+        return "Harbour{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", capacity=" + capacity +
+                '}';
+    }
 }

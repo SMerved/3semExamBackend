@@ -20,18 +20,18 @@ public class BoatDto implements Serializable {
     private final String name;
     @NotNull
     private final String image;
-
-    private HarbourDto harbourDto;
+    @NotNull
+    private final HarbourDto.InnerHarbourDto innerHarbourDto;
     @NotNull
     private final Set<OwnerDto> ownerDtos;
 
-    public BoatDto(Long id, String brand, String make, String name, String image, HarbourDto harbourDto, Set<OwnerDto> ownerDtos) {
+    public BoatDto(Long id, String brand, String make, String name, String image, HarbourDto.InnerHarbourDto innerHarbourDto, Set<OwnerDto> ownerDtos) {
         this.id = id;
         this.brand = brand;
         this.make = make;
         this.name = name;
         this.image = image;
-        this.harbourDto = harbourDto;
+        this.innerHarbourDto = innerHarbourDto;
         this.ownerDtos = ownerDtos;
     }
 
@@ -41,6 +41,7 @@ public class BoatDto implements Serializable {
         this.make = boat.getMake();
         this.name = boat.getName();
         this.image = boat.getImage();
+        this.innerHarbourDto = new HarbourDto.InnerHarbourDto(boat.getHarbour());
         this.ownerDtos = new HashSet<>();
         for (Owner owner : boat.getOwners()) {
             this.ownerDtos.add(new OwnerDto(owner));
@@ -63,8 +64,12 @@ public class BoatDto implements Serializable {
         return image;
     }
 
-    public HarbourDto getHarbourDto() {
-        return harbourDto;
+    public Long getId() {
+        return id;
+    }
+
+    public HarbourDto.InnerHarbourDto getInnerHarbourDto() {
+        return innerHarbourDto;
     }
 
     public Set<OwnerDto> getOwnerDtos() {
@@ -89,10 +94,14 @@ public class BoatDto implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "brand = " + brand + ", " +
-                "make = " + make + ", " +
-                "name = " + name + ", " +
-                "image = " + image + ")";
+        return "BoatDto{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", make='" + make + '\'' +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", innerHarbourDto=" + innerHarbourDto +
+                ", ownerDtos=" + ownerDtos +
+                '}';
     }
 }

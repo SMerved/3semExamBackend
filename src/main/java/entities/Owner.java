@@ -4,10 +4,7 @@ import dtos.BoatDto;
 import dtos.OwnerDto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -57,12 +54,15 @@ public class Owner implements Serializable {
     }
 
     public Owner(OwnerDto ownerDto) {
+        this.id = ownerDto.getId();
         this.name = ownerDto.getName();
         this.address = ownerDto.getAddress();
         this.phone = ownerDto.getPhone();
         this.boats = new HashSet<>();
-        for (BoatDto boatDto : ownerDto.getBoatDtos()) {
-            this.boats.add(new Boat(boatDto));
+        if (ownerDto.getBoatDtos()!= null) {
+            for (BoatDto boatDto : ownerDto.getBoatDtos()) {
+                this.boats.add(new Boat(boatDto));
+            }
         }
     }
 
@@ -106,4 +106,25 @@ public class Owner implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Owner owner = (Owner) o;
+        return Objects.equals(name, owner.name) && Objects.equals(address, owner.address) && Objects.equals(phone, owner.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, address, phone);
+    }
+
+    @Override
+    public String toString() {
+        return "Owner{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }

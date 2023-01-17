@@ -26,7 +26,7 @@ public class HarbourDto implements Serializable {
         this.boats = boats;
     }
 
-    public HarbourDto(Harbour harbour){
+    public HarbourDto(Harbour harbour) {
         this.name = harbour.getName();
         this.address = harbour.getAddress();
         this.capacity = harbour.getCapacity();
@@ -52,28 +52,69 @@ public class HarbourDto implements Serializable {
         return boats;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HarbourDto entity = (HarbourDto) o;
-        return Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.address, entity.address) &&
-                Objects.equals(this.capacity, entity.capacity) &&
-                Objects.equals(this.boats, entity.boats);
+    public static class InnerHarbourDto {
+        private final Long id;
+        private final String name;
+        private final String address;
+        private final int capacity;
+
+        public InnerHarbourDto(Harbour harbour) {
+            this.id = harbour.getId();
+            this.name = harbour.getName();
+            this.address = harbour.getAddress();
+            this.capacity = harbour.getCapacity();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return "InnerHarbourDto{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", address='" + address + '\'' +
+                    ", capacity=" + capacity +
+                    '}';
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, address, capacity, boats);
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            HarbourDto entity = (HarbourDto) o;
+            return Objects.equals(this.name, entity.name) &&
+                    Objects.equals(this.address, entity.address) &&
+                    Objects.equals(this.capacity, entity.capacity) &&
+                    Objects.equals(this.boats, entity.boats);
+        }
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "name = " + name + ", " +
-                "address = " + address + ", " +
-                "capacity = " + capacity + ", " +
-                "boats = " + boats + ")";
-    }
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, address, capacity, boats);
+        }
+
+        @Override
+        public String toString() {
+            return getClass().getSimpleName() + "(" +
+                    "name = " + name + ", " +
+                    "address = " + address + ", " +
+                    "capacity = " + capacity + ", " +
+                    "boats = " + boats + ")";
+        }
+
 }

@@ -4,10 +4,7 @@ import dtos.BoatDto;
 import dtos.OwnerDto;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -64,11 +61,12 @@ public class Boat implements Serializable {
     }
 
     public Boat(BoatDto boatDto){
+        this.id = boatDto.getId();
         this.brand = boatDto.getBrand();
         this.make = boatDto.getMake();
         this.name = boatDto.getName();
-        this.image = boatDto.getName();
-        this.harbour = new Harbour(boatDto.getHarbourDto());
+        this.image = boatDto.getImage();
+        this.harbour = new Harbour(boatDto.getInnerHarbourDto());
         this.owners = new HashSet<>();
         for (OwnerDto ownerDto : boatDto.getOwnerDtos()) {
             this.owners.add(new Owner(ownerDto));
@@ -131,4 +129,28 @@ public class Boat implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Boat boat = (Boat) o;
+        return Objects.equals(brand, boat.brand) && Objects.equals(make, boat.make) && Objects.equals(name, boat.name) && Objects.equals(image, boat.image) && Objects.equals(harbour, boat.harbour) && Objects.equals(owners, boat.owners);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(brand, make, name, image, harbour, owners);
+    }
+
+    @Override
+    public String toString() {
+        return "Boat{" +
+                "brand='" + brand + '\'' +
+                ", make='" + make + '\'' +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", harbour=" + harbour +
+                ", owners=" + owners +
+                '}';
+    }
 }

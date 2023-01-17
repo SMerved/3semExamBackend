@@ -12,6 +12,8 @@ import java.util.Set;
 
 public class OwnerDto implements Serializable {
     @NotNull
+    private Long id;
+    @NotNull
     private final String name;
     @NotNull
     private final String address;
@@ -25,8 +27,15 @@ public class OwnerDto implements Serializable {
         this.phone = phone;
         this.boatDtos = boatDtos;
     }
+    public OwnerDto(Long id, String name, String address, String phone) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+    }
 
     public  OwnerDto(Owner owner){
+        this.id = owner.getId();
         this.name = owner.getName();
         this.address = owner.getAddress();
         this.phone = owner.getPhone();
@@ -46,6 +55,10 @@ public class OwnerDto implements Serializable {
 
     public Set<BoatDto> getBoatDtos() {
         return boatDtos;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
